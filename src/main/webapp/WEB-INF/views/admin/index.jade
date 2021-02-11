@@ -1,0 +1,27 @@
+extends ../layout/base_admin
+block append javascripts 
+	script(src='/js/data.js')
+
+block maincontents
+	.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+		h1.h2  Section title
+		.btn-toolbar.mb-2.mb-md-0
+			.btn-group.mr-2
+				button.btn.btn-sm.btn-outline-secondary(type='button') Share
+				button.btn.btn-sm.btn-outline-secondary(type='button') Export
+			button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
+				span(data-feather='calendar')
+				|  This week
+	//- .table-responsive
+	table#table
+		//- thead
+		//- 	tr
+		//- 		th(data-field='id') #
+		//- 		th(data-field='uuid') ID
+		//- 		th(data-field='name') Item Name
+		//- 		th(data-field='mobile') mobile
+		//- 		th(data-field='ulevel') ulevel
+		//- 		th(data-field='comname') comname
+		//- 		th(data-field='businessnum') businessnum
+		//- 		th(data-field='regdate') regdate
+		//- 		th(data-field='account_status') Status

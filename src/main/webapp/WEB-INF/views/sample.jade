@@ -1,0 +1,8 @@
+doctype html
+html
+  head
+    title= pageName
+  body
+    ol#users
+      for user in users
+          li 이름   : #{user.name}, 회사이름: #{user.comname}

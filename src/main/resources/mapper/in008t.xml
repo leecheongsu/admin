@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.admin.mapper.IN008TMapper">
+
+	<select id="selectAll" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">
+		select *
+		  from in008t
+		 order by regdate
+	</select>
+
+	<update id="update">
+			update in008t
+			   set ${column_name} = #{column_value}
+			 where uuid = #{pk_value}
+	</update>
+</mapper>
