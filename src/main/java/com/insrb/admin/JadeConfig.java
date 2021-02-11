@@ -31,6 +31,10 @@ public class JadeConfig {
 	public ViewResolver viewResolver() {
 		JadeViewResolver viewResolver = new JadeViewResolver();
 		viewResolver.setConfiguration(jadeConfiguration());
+		// Session 접근토록
+		// ref: https://github.com/neuland/spring-jade4j/issues/20
+		viewResolver.setExposeSessionAttributes(true);
+		viewResolver.setAllowSessionOverride(true);
 		return viewResolver;
 	}
 }

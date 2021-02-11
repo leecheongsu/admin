@@ -2,10 +2,9 @@ nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
     .sidebar-sticky.pt-3
         ul.nav.flex-column
             li.nav-item
-                a.nav-link.active(href='#')
+                a.nav-link(href='#')
                     span(data-feather='home')
                     |               가입현황 
-                    span.sr-only (current)
             li.nav-item
                 a.nav-link(href='#')
                     span(data-feather='shopping-cart')
@@ -16,6 +15,7 @@ nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
                 span(data-feather='plus-circle')
         ul.nav.flex-column.mb-2
             li.nav-item
-                a.nav-link(href='#')
+                a.nav-link.active(href='#')
                     span(data-feather='users')
                     |               관리자 관리
+                    //- span.sr-only (current)

@@ -6,7 +6,13 @@
 	<select id="selectAll" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">
 		select *
 		  from in008t
-		 order by regdate
+		 order by regdate asc
+	</select>
+
+	<select id="selectById" parameterType="String" resultType="com.insrb.admin.model.LoginUser">
+		select *
+		  from in008t
+		 where uuid = #{uuid}  
 	</select>
 
 	<update id="update">
