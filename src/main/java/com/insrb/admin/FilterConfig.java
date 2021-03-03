@@ -10,7 +10,7 @@ public class FilterConfig {
 
     // uncomment this and comment the @Component in the filter class definition to register only for a url pattern
     @Bean
-    public FilterRegistrationBean<AuthFilter> loggingFilter() {
+    public FilterRegistrationBean<AuthFilter> rulOfAuthFilter() {
         FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
 
         registrationBean.setFilter(new AuthFilter());

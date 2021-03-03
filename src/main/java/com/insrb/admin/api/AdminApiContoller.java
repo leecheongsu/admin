@@ -2,9 +2,8 @@ package com.insrb.admin.api;
 
 import com.insrb.admin.exception.InsuEncryptException;
 import com.insrb.admin.mapper.CommonMapper;
+import com.insrb.admin.mapper.IN003T_V1Mapper;
 import com.insrb.admin.mapper.IN008TMapper;
-import com.insrb.admin.model.LoginUser;
-import com.insrb.admin.util.InsuConstant;
 import com.insrb.admin.util.InsuStringUtil;
 import com.insrb.admin.util.cyper.UserInfoCyper;
 import java.sql.SQLException;
@@ -33,8 +32,11 @@ public class AdminApiContoller {
 	@Autowired
 	IN008TMapper in008tMapper;
 
+	@Autowired
+	IN003T_V1Mapper in003t_v1Mapper;
+
 	@GetMapping(path = "/in008t/data")
-	public List<Map<String, Object>> index(HttpSession session) throws InsuEncryptException {
+	public List<Map<String, Object>> in008t_data(HttpSession session) throws InsuEncryptException {
 		// LoginUser loginUser = (LoginUser) session.getAttribute(InsuConstant.USER);
 		// log.info("{} request /admin/api/data",loginUser.getUuid());
 		List<Map<String, Object>> users = in008tMapper.selectAll();
@@ -47,19 +49,20 @@ public class AdminApiContoller {
 	}
 
 	@PutMapping(path = "/in008t/update")
-	public String update(
+	public String in008t_update(
 		@RequestParam(name = "pk", required = true) String pk_value,
 		@RequestParam(name = "name", required = true) String column_name,
 		@RequestParam(name = "value", required = true) String column_value
-	) throws InsuEncryptException {
+	)
+		throws InsuEncryptException {
 		log.info("PK:{},{},{}", pk_value, column_name, column_value);
 		// (String table_name,String column_name,String column_value,String pk_column,String pk_value);
 		// insuroboad2019@insurobo.co.kr,comname,인슈로보xcsdfsdf
 
-		if(InsuStringUtil.Equals(column_name, "mobile")){
+		if (InsuStringUtil.Equals(column_name, "mobile")) {
 			column_value = UserInfoCyper.EncryptMobile(column_value);
 		}
-		if(InsuStringUtil.Equals(column_name, "upwd")){ 
+		if (InsuStringUtil.Equals(column_name, "upwd")) {
 			column_value = UserInfoCyper.EncryptPassword(pk_value, column_value);
 		}
 		try {
@@ -73,5 +76,16 @@ public class AdminApiContoller {
 			}
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 오류.");
 		}
+	}
+
+	@GetMapping(path = "/in003t_v1/data")
+	public List<Map<String, Object>> in003t_v1_data(HttpSession session) throws InsuEncryptException {
+		List<Map<String, Object>> list = in003t_v1Mapper.selectAll();
+		for (Map<String, Object> item : list) {
+			item.put("mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("mobile"))));
+			item.put("pbohumja_mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("pbohumja_mobile"))));
+		}
+
+		return list;
 	}
 }

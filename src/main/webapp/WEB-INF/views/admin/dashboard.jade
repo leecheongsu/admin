@@ -1,0 +1,199 @@
+extends ../layout/base_admin
+block append javascripts 
+	script(src='/js/admin/api/dashboard.js')
+
+block append stylesheets 
+	style.
+		.w-30 {
+			width: 30% !important;
+		}
+
+
+block maincontents
+	table#table
+	.container-fluid
+		.row
+			.col-sm
+				div
+					strong 1. 단체보험계약자 정보
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.w-30.bg-light 단체보험계약자명
+								td
+									span
+				div.mt-3
+					strong 2. 보험계약자 정보
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.w-30.bg-light 성명/상호명
+								td
+									span#polholder
+							tr
+								td.w-30.bg-light 연락처
+								td
+									span#mobile
+							tr
+								td.w-30.bg-light 이메일
+								td
+									span#email
+							tr
+								td.w-30.bg-light 생년월일/사업자번호
+								td
+									span#insurant_a_jumina
+
+				div.mt-3
+					strong 3. 피보험자 정보
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.w-30.bg-light 성명/상호명
+								td
+									span
+							tr
+								td.w-30.bg-light 생년월일/사업자번호
+								td
+									span#pbohumja_birth
+							tr
+								td.w-30.bg-light 연락처
+								td
+									span#pbohumja_mobile
+							tr
+								td.w-30.bg-light 보험목적물 소유자
+								td
+									span
+
+				div.mt-3
+					strong 4. 첨부파일
+					table.table-sm.table-borderless.w-100
+						tbody
+							tr
+								td
+									input(type='file')
+
+
+
+			.col-sm
+				div
+					strong 5. 건물정보
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.w-30.bg-light 소재지
+								td(colspan="2")
+									span#insloc
+							tr
+								td.w-30.bg-light 건물용도
+								td(colspan="2")
+									span#main_purps
+							tr
+								td.w-30.bg-light 연면적
+								td(colspan="2")
+									span#total_area
+									span  m
+										sup 2
+							tr
+								td.w-30.bg-light 사용승인일
+								td(colspan="2")
+									span#use_apr_date
+							tr
+								td.w-30.bg-light 층수
+								td(colspan="2")
+									span#flr_name
+							tr
+								td.w-30.bg-light 
+								td.text-center.bg-light 
+									span 가입물건
+								td.text-center.bg-light 
+									span 건축물대장
+							tr
+								td.w-30.bg-light 기둥
+								td
+									span#pole_strc
+								td
+									span#main_struct
+							tr
+								td.w-30.bg-light 지붕
+								td
+									span#roof_strc
+								td
+									span#roof_name
+
+
+				div.mt-3
+					strong 6. 상품정보
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.w-30.bg-light 보험사명
+								td
+									span#inscompany
+							tr
+								td.w-30.bg-light 계약번호
+								td
+									span#quote_no
+							tr
+								td.w-30.bg-light 상품번호
+								td
+									span#sec_no
+							tr
+								td.w-30.bg-light 보험기간
+								td
+									span#insperiod
+							tr
+								td.w-30.bg-light 총 보험료
+								td.text-right
+									span#tpymprem
+							tr
+								td.w-30.bg-light 정부 부담 보험료
+								td.text-right
+									span#govtprem
+							tr
+								td.w-30.bg-light 지자체 부담 보험료
+								td.text-right
+									span#lgovtprem
+							tr
+								td.w-30.bg-light 보험료
+								td.text-right
+									span#perprem
+
+			.col-sm
+				div
+					strong 7. 담보내역
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								th.bg-light  보장내용
+								th.text-center.bg-light  보장범위
+								th.text-center.bg-light  보험료
+							tr
+								td.w-30.bg-light 풍수해(건물)
+								td.text-right
+									span#elagorgninsdamt1
+								td.text-right
+									span
+							tr
+								td.w-30.bg-light 풍수해(시설및집기)
+								td.text-right
+									span#elagorgninsdamt2
+								td.text-right
+									span
+							tr
+								td.w-30.bg-light 풍수해(재고자산)
+								td.text-right
+									span#elagorgninsdamt3
+								td.text-right
+									span
+							tr
+								td.w-30.bg-light 풍수해(자기부담금)
+								td.text-right
+									span#elagorgninsdamt4
+								td.text-right
+									span
+
+				div.mt-3
+					strong 8. 기타
+					.form-group
+						label(for='rmark') 특이사항
+						textarea#rmark.form-control(rows='3')

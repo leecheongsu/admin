@@ -37,11 +37,7 @@ $(document).ready(function () {
 				field: "regdate",
 				title: "가입일자",
 				sortable: true,
-				formatter: function (value, row) {
-					// var phone = value.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-					var newstr = value.replace(/-/g, ".");
-					return newstr;
-				},
+				formatter: dateFormatter
 			},
 			{
 				title: "이메일",
@@ -57,12 +53,7 @@ $(document).ready(function () {
 				title: "핸드폰",
 				field: "mobile",
 				editable: defaultXeditableNumberOption,
-				formatter: function (value, row) {
-					// var phone = value.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-					var phone = value.replace(/\D*(\d{3})\D*(\d{4})\D*(\d{4})\D*/, "$1-$2-$3");
-					if (phone.indexOf("-") === -1) phone = value.replace(/\D*(\d{2})\D*(\d{4})\D*(\d{4})\D*/, "$1-$2-$3");
-					return phone;
-				},
+				formatter: mobileFormatter,
 			},
 			{
 				//A:슈퍼유저 B:보험사 C:GA

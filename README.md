@@ -6,7 +6,7 @@
 
 # Javascript Components
 ## bootstrap-table
-    https://bootstrap-table.com/docs/api/column-options/#events
+    https://bootstrap-table.com/
 
 ## x-editable
     http://vitalets.github.io/x-editable/docs.html

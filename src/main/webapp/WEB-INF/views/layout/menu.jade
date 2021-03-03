@@ -1,21 +1,21 @@
+- var _MENU = _menu;
 nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
     .sidebar-sticky.pt-3
         ul.nav.flex-column
             li.nav-item
-                a.nav-link(href='#')
-                    span(data-feather='home')
-                    |               가입현황 
-            li.nav-item
-                a.nav-link(href='#')
-                    span(data-feather='shopping-cart')
-                    |               정산
+                a.nav-link(href='/admin/dashboard' class=_MENU == 'dashboard' ? 'active' : '')
+                    i.fa.fa-line-chart(aria-hidden='true')
+                    span.ml-2 가입현황
         h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
             span Membership
             a.d-flex.align-items-center.text-muted(href='#' aria-label='Add a new report')
-                span(data-feather='plus-circle')
+                span(data-feather='align-left')
         ul.nav.flex-column.mb-2
             li.nav-item
-                a.nav-link.active(href='#')
-                    span(data-feather='users')
-                    |               관리자 관리
-                    //- span.sr-only (current)
+                a.nav-link(href='/admin/manager' class=_MENU == 'manager' ? 'active' : '')
+                    i.fa.fa-lock(aria-hidden='true')
+                    span.ml-2 관리자 정보
+            li.nav-item
+                a.nav-link(href='/admin/users' class=_MENU == 'users' ? 'active' : '')
+                    i.fa.fa-user-o(aria-hidden='true')
+                    span.ml-2 사용자 정보
