@@ -2,6 +2,7 @@ package com.insrb.admin.api;
 
 import com.insrb.admin.exception.InsuEncryptException;
 import com.insrb.admin.mapper.CommonMapper;
+import com.insrb.admin.mapper.IN003TMapper;
 import com.insrb.admin.mapper.IN003T_V1Mapper;
 import com.insrb.admin.mapper.IN008TMapper;
 import com.insrb.admin.util.InsuStringUtil;
@@ -28,6 +29,9 @@ public class AdminApiContoller {
 
 	@Autowired
 	CommonMapper commonMapper;
+
+	@Autowired
+	IN003TMapper in003tMapper;
 
 	@Autowired
 	IN008TMapper in008tMapper;
@@ -66,7 +70,8 @@ public class AdminApiContoller {
 			column_value = UserInfoCyper.EncryptPassword(pk_value, column_value);
 		}
 		try {
-			in008tMapper.update(column_name, column_value, pk_value);
+			int cnt = in008tMapper.update(column_name, column_value, pk_value);
+			if (cnt != 1) new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 오류.");
 			return "";
 		} catch (DataAccessException e) {
 			if (e.getRootCause() instanceof SQLException) {
@@ -87,5 +92,18 @@ public class AdminApiContoller {
 		}
 
 		return list;
+	}
+
+	@PutMapping(path = "/in003t/update")
+	public String in003t_update(
+		@RequestParam(name = "pk", required = true) String pk_value,
+		@RequestParam(name = "name", required = true) String column_name,
+		@RequestParam(name = "value", required = true) String column_value
+	)
+		throws InsuEncryptException {
+		log.info("PK:{},{},{}", pk_value, column_name, column_value);
+		int cnt = in003tMapper.update(column_name, column_value, pk_value);
+		if (cnt != 1) new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 오류.");
+		return "";
 	}
 }

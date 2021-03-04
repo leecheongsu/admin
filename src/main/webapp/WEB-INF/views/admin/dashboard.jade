@@ -2,6 +2,7 @@ extends ../layout/base_admin
 block append javascripts 
 	script(src='/js/admin/api/dashboard.js')
 
+
 block append stylesheets 
 	style.
 		.w-30 {
@@ -10,6 +11,24 @@ block append stylesheets
 
 
 block maincontents
+	.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mt-2.mb-3
+		table.parameter.table-sm.table-borderless.w-100
+			tbody
+				tr.form-inline
+					td
+						strong.mr-2 보험가입일
+						input#p_from.datepicker.form-control.form-control-sm
+						span.mx-1 ~
+						input#p_to.datepicker.form-control.form-control-sm
+					td
+						strong.mr-2 보험사
+						select#p_company.form-control.form-control-sm
+							option(value='/' selected='selected') 전체
+							option(value='/') 메리츠화재
+							option(value='/') 현대해상
+					td
+						button.btn.btn-sm.btn-outline-secondary.ml-5(type='button') 조회
+	
 	table#table
 	.container-fluid
 		.row
@@ -66,12 +85,18 @@ block maincontents
 
 				div.mt-3
 					strong 4. 첨부파일
-					table.table-sm.table-borderless.w-100
+					table.table-sm.table-bordered.w-100
 						tbody
 							tr
+								td.w-30.bg-light 파일명
 								td
-									input(type='file')
-
+									a#filename
+									//- span#filename
+							tr
+								td(colspan="2")
+									form#uploadForm(method='POST', enctype='multipart/form-data')
+										input(type='file', name='file')
+										button#btnUpload 파일업로드
 
 
 			.col-sm
@@ -194,6 +219,10 @@ block maincontents
 
 				div.mt-3
 					strong 8. 기타
-					.form-group
-						label(for='rmark') 특이사항
-						textarea#rmark.form-control(rows='3')
+					table.table-sm.table-bordered.table-hover.w-100
+						tbody
+							tr
+								td.bg-light 특이사항
+							tr
+								td
+									a#rmark(href='#')

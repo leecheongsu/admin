@@ -52,6 +52,8 @@ public class AuthFilter implements Filter {
 			res.sendRedirect("/signin");
 			return;
 		}
+
+		log.info("AuthFilter2  {} : Success",  req.getRequestURI());
 		chain.doFilter(request, response);
 	}
 

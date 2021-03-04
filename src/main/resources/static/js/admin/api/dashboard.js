@@ -9,6 +9,24 @@ $(document).ready(function () {
 		return moneyFormatter(value) + "원";
 	}
 
+	// https://api.jqueryui.com/datepicker/#option-dateFormat
+	$.datepicker.setDefaults({
+		// showOn: "button",
+		// buttonImageOnly: true,
+		// buttonImage: "calendar.gif",
+		// buttonText: "Calendar",
+        prevText: '이전 달',
+        nextText: '다음 달',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        showMonthAfterYear: true,
+        yearSuffix: '년',
+		dateFormat: "yy-mm-dd",
+	});
+	$(".datepicker").datepicker();
 	var $table = $("#table");
 
 	$table.bootstrapTable({
@@ -17,10 +35,10 @@ $(document).ready(function () {
 		pagination: true,
 		iconSize: "sm",
 		classes: "table table-striped table-hover table-sm",
-		search: true,
-		showRefresh: true,
+		// search: true,
+		// showRefresh: true,
 		// showToggle: true,
-		showColumns: true,
+		// showColumns: true,
 		cache: false,
 		pageSize: 20,
 		// 가입일자	소속	담당자	핸드폰	등급명	등급	상태
@@ -38,6 +56,7 @@ $(document).ready(function () {
 			{
 				title: "상품번호",
 				field: "quote_no",
+				sortable: true,
 				align: "center",
 			},
 			{
@@ -54,16 +73,19 @@ $(document).ready(function () {
 			{
 				title: "상품명",
 				field: "prod_name",
+				sortable: true,
 				align: "center",
 			},
 			{
 				title: "보험사",
 				field: "inscompany",
+				sortable: true,
 				align: "center",
 			},
 			{
 				title: "계약일자",
 				field: "insdate",
+				sortable: true,
 				align: "center",
 				formatter: dateFormatter,
 			},
@@ -78,12 +100,14 @@ $(document).ready(function () {
 			{
 				title: "보험료",
 				field: "premium",
+				sortable: true,
 				align: "center",
 				formatter: moneyFormatter,
 			},
 			{
 				title: "결제방법",
 				field: "poption",
+				sortable: true,
 				align: "center",
 				formatter: function (value, _data) {
 					if (value == "5") return "간편이체";
@@ -320,6 +344,9 @@ $(document).ready(function () {
 		$("#pbohumja_birth").text(_data.pbohumja_birth);
 		$("#pbohumja_mobile").text(mobileFormatter(_data.pbohumja_mobile));
 
+		// 4
+		$("#filename").attr("href", "/admin/dashboard/file?filename=" + _data.filename);
+		$("#filename").text(_data.filename);
 		// 5
 		$("#insloc").text(_data.insloc);
 		$("#main_purps").text(_data.main_purps);
@@ -336,13 +363,28 @@ $(document).ready(function () {
 		$("#elagorgninsdamt3").text(toKRW(_data.elagorgninsdamt3));
 		$("#elagorgninsdamt4").text(toKRW(_data.elagorgninsdamt4));
 
-
 		// tpymprem, perprem, govtprem, lgovtprem
 		$("#tpymprem").text(toKRW(_data.tpymprem));
 		$("#perprem").text(toKRW(_data.perprem));
 		$("#govtprem").text(toKRW(_data.govtprem));
 		$("#lgovtprem").text(toKRW(_data.lgovtprem));
 
+		// 8
+		$("#rmark").text(_data.rmark);
+		$("#rmark").editable({
+			url: "/admin/api/in003t/update",
+			mode: "inline",
+			pk: _data.quote_no,
+			title: "Enter comments",
+			type: "textarea",
+			emptytext: defaultXeditableOption.emptytext,
+			error: defaultXeditableOption.error,
+			success: defaultXeditableOption.success,
+			ajaxOptions: {
+				type: "put",
+			},
+			rows: 3,
+		});
 	});
 
 	$table.on("load-success.bs.table", function (_event, _data, _args) {
@@ -351,5 +393,42 @@ $(document).ready(function () {
 		}
 		// Send first row click event when loading
 		$("#table").find('[data-index="0"]').find("td:eq(0)").click();
+	});
+
+	$("#btnUpload").on("click", function (event) {
+		event.preventDefault();
+
+		var form = $("#uploadForm")[0];
+		var data = new FormData(form);
+
+		if (form[0].files.length < 1) {
+			noti_error("먼저 파일을 선택하세요!");
+			return;
+		}
+		data.append("quote_no", $("#quote_no").text());
+
+		$("#btnUpload").prop("disabled", true);
+
+		$.ajax({
+			type: "POST",
+			enctype: "multipart/form-data",
+			url: "/admin/dashboard/upload",
+			data: data,
+			processData: false,
+			contentType: false,
+			cache: false,
+			timeout: 600000,
+			success: function (data) {
+				console.log(data);
+				$("#filename").text(data);
+				$("#btnUpload").prop("disabled", false);
+				noti_success("success");
+			},
+			error: function (e) {
+				console.log(e);
+				$("#btnUpload").prop("disabled", false);
+				noti_error("fail");
+			},
+		});
 	});
 });

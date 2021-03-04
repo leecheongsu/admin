@@ -57,16 +57,14 @@ var moneyFormatter = function (value) {
 	return new Intl.NumberFormat().format(value);
 };
 
-$(document).ready(function () {
-	// Default Setting
-	var delay = alertify.get("notifier", "delay");
-	alertify.set("notifier", "delay", 1);
+// Alertify Setting
+var delay = alertify.get("notifier", "delay");
+alertify.set("notifier", "delay", 1);
 
-	function noti_success(message) {
-		alertify.success(message);
-	}
+var noti_success = function (message) {
+	alertify.success(message);
+};
 
-	function noti_error(message) {
-		alertify.error(message);
-	}
-});
+var noti_error = function (message) {
+	alertify.error(message);
+};
