@@ -6,43 +6,57 @@ $(document).ready(function () {
 	};
 
 	function toKRW(value) {
+		if (isNaN(value)) return "-";
 		return moneyFormatter(value) + "원";
 	}
 
-	// https://api.jqueryui.com/datepicker/#option-dateFormat
-	$.datepicker.setDefaults({
-		// showOn: "button",
-		// buttonImageOnly: true,
-		// buttonImage: "calendar.gif",
-		// buttonText: "Calendar",
-        prevText: '이전 달',
-        nextText: '다음 달',
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-        showMonthAfterYear: true,
-        yearSuffix: '년',
-		dateFormat: "yy-mm-dd",
-	});
 	$(".datepicker").datepicker();
+
+	$("#p_from").datepicker("setDate", moment().add(-1, "months").toDate());
+	$("#p_to").datepicker("setDate", moment().toDate());
+
 	var $table = $("#table");
+
+	$("#queryButton").click(function () {
+		$table.bootstrapTable("refresh");
+	});
+
+	$("#oneweekButton").click(function () {
+		$("#p_from").datepicker("setDate", moment().add(-1, "weeks").toDate());
+	});
+	$("#onemonthButton").click(function () {
+		$("#p_from").datepicker("setDate", moment().add(-1, "months").toDate());
+	});
 
 	$table.bootstrapTable({
 		url: "/admin/api/in003t_v1/data",
 		idField: "uuid",
 		pagination: true,
+		sidePagination: "server",
 		iconSize: "sm",
-		classes: "table table-striped table-hover table-sm",
+		classes: "table table-hover table-sm",
 		// search: true,
 		// showRefresh: true,
 		// showToggle: true,
 		// showColumns: true,
 		cache: false,
 		pageSize: 20,
-		// 가입일자	소속	담당자	핸드폰	등급명	등급	상태
+		queryParamsType: "",
+		queryParams: function (params) {
+			params.p_prod_code = $("#p_prod_code").val();
+			params.p_from = $("#p_from").val();
+			params.p_to = $("#p_to").val();
+			return params;
+		},
+		pagination: true,
+		sidePagination: "server",
+		cache: false,
+		pageSize: 20,
+		clickToSelect: true,
 		columns: [
+			{
+				radio:true
+			},
 			{
 				title: "#",
 				field: "id",
@@ -62,7 +76,7 @@ $(document).ready(function () {
 			{
 				title: "증권번호",
 				field: "sec_no",
-				align: "center",
+				align: "left",
 			},
 			{
 				title: "상품코드",
@@ -101,7 +115,7 @@ $(document).ready(function () {
 				title: "보험료",
 				field: "premium",
 				sortable: true,
-				align: "center",
+				align: "right",
 				formatter: moneyFormatter,
 			},
 			{
@@ -138,6 +152,7 @@ $(document).ready(function () {
 			},
 			{
 				title: "상태",
+				field: "stat",
 				align: "center",
 			},
 			{
@@ -341,6 +356,8 @@ $(document).ready(function () {
 		$("#sec_no").text(_data.sec_no);
 		$("#insperiod").text(_data.insstdt + "~" + _data.inseddt);
 
+		// 3
+		$("#insurant_b").text(_data.insurant_b);
 		$("#pbohumja_birth").text(_data.pbohumja_birth);
 		$("#pbohumja_mobile").text(mobileFormatter(_data.pbohumja_mobile));
 
@@ -358,19 +375,59 @@ $(document).ready(function () {
 		$("#pole_strc").text(_data.pole_strc);
 		$("#roof_strc").text(_data.roof_strc);
 
-		$("#elagorgninsdamt1").text(toKRW(_data.elagorgninsdamt1));
-		$("#elagorgninsdamt2").text(toKRW(_data.elagorgninsdamt2));
-		$("#elagorgninsdamt3").text(toKRW(_data.elagorgninsdamt3));
-		$("#elagorgninsdamt4").text(toKRW(_data.elagorgninsdamt4));
-
 		// tpymprem, perprem, govtprem, lgovtprem
 		$("#tpymprem").text(toKRW(_data.tpymprem));
 		$("#perprem").text(toKRW(_data.perprem));
 		$("#govtprem").text(toKRW(_data.govtprem));
 		$("#lgovtprem").text(toKRW(_data.lgovtprem));
 
+		$("#preminums > tbody").empty();
+		// 현대해상 보험료 내역
+		if (_data.prod_code == "h007") {
+			$("#preminums > tbody").append(
+				'<tr><td class="bg-right">풍수해(건물)</td><td class="w-30 text-right">' +
+					toKRW(_data.elagorgninsdamt1) +
+					'</td><td class="w-30 text-right">-</td></tr>'
+			);
+			$("#preminums > tbody").append(
+				'<tr><td class="bg-right">풍수해(시설및집기)</td><td class="w-30 text-right">' +
+					toKRW(_data.elagorgninsdamt2) +
+					'</td><td class="w-30 text-right">-</td></tr>'
+			);
+			$("#preminums > tbody").append(
+				'<tr><td class="bg-right">풍수해(재고자산)</td><td class="w-30 text-right">' +
+					toKRW(_data.elagorgninsdamt3) +
+					'</td><td class="w-30 text-right">-</td></tr>'
+			);
+			$("#preminums > tbody").append(
+				'<tr><td class="bg-right">풍수해(자기부담금)</td><td class="w-30 text-right">' +
+					toKRW(_data.elagorgninsdamt4) +
+					'</td><td class="w-30 text-right">-</td></tr>'
+			);
+		}
+
+		// 메리츠화재 보험료 내역
+		if (_data.prod_code == "m002" && _data.preminums) {
+			_data.preminums.forEach(function (preminum) {
+				console.log(preminum);
+				var ins_amt = toKRW(preminum.ins_amt);
+				var amt = toKRW(preminum.premium);
+				$("#preminums > tbody").append(
+					'<tr><td class="bg-right">' +
+						preminum.name +
+						'</td><td class="w-30 text-right">' +
+						ins_amt +
+						'</td><td class="w-30 text-right">' +
+						amt +
+						"</td></tr>"
+				);
+			});
+		}
+
 		// 8
+		if ($("#rmark").hasClass("editable")) $("#rmark").editable("destroy");
 		$("#rmark").text(_data.rmark);
+
 		$("#rmark").editable({
 			url: "/admin/api/in003t/update",
 			mode: "inline",
@@ -379,7 +436,10 @@ $(document).ready(function () {
 			type: "textarea",
 			emptytext: defaultXeditableOption.emptytext,
 			error: defaultXeditableOption.error,
-			success: defaultXeditableOption.success,
+			success: function(res, newValue) {
+				_data.rmark = newValue;
+				alertify.success("수정하였습니다.");
+			},
 			ajaxOptions: {
 				type: "put",
 			},

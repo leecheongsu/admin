@@ -3,10 +3,17 @@
 
 <mapper namespace="com.insrb.admin.mapper.IN008TMapper">
 
+	<select id="selectAllTotal" parameterType="String" resultType="int">
+		select count(*)
+		  from in008t
+		 order by regdate asc
+	</select>
+
 	<select id="selectAll" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">
 		select *
 		  from in008t
 		 order by regdate asc
+		 offset #{pageNumber} -1 rows fetch next #{pageSize} rows only
 	</select>
 
 	<select id="selectById" parameterType="String" resultType="com.insrb.admin.model.LoginUser">

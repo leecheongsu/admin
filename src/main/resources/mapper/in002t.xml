@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.admin.mapper.IN002TMapper">
+
+	<select id="selectByQuoteNo" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">
+		select b.code, a.ins_amt, decode(substr(b.code,1,1),'B','(건물)','K','(가재)','(기타)')|| b.name name,a.premium
+		  from in002t a,in002c b
+		 where a.quote_no = #{quote_no}
+		   and a.aply_yn = 'Y'
+		   and a.item_id = b.code
+	</select>
+</mapper>

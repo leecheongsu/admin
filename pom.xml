@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.insrb</groupId>
 	<artifactId>admin</artifactId>
-	<version>0.9.0</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<name>admin</name>
 	<description>Admin project for Insurobo</description>

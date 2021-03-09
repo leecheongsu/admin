@@ -8,6 +8,9 @@ block append stylesheets
 		.w-30 {
 			width: 30% !important;
 		}
+		.w4-b {
+			width: 4rem;
+		}
 
 
 block maincontents
@@ -16,18 +19,23 @@ block maincontents
 			tbody
 				tr.form-inline
 					td
+						strong.mr-2 보험사
+						select#p_prod_code.form-control.form-control-sm
+							option(value='/' selected='selected') 전체
+							option(value='m002') 메리츠화재
+							option(value='h007') 현대해상
+					td
 						strong.mr-2 보험가입일
 						input#p_from.datepicker.form-control.form-control-sm
 						span.mx-1 ~
 						input#p_to.datepicker.form-control.form-control-sm
 					td
-						strong.mr-2 보험사
-						select#p_company.form-control.form-control-sm
-							option(value='/' selected='selected') 전체
-							option(value='/') 메리츠화재
-							option(value='/') 현대해상
+						button#oneweekButton.btn.btn-sm.btn-outline-secondary.w4-b.mr-1(type='button') 1주
+						button#onemonthButton.btn.btn-sm.btn-outline-secondary.w4-b.mr-1(type='button') 1개월
+						button#threemonthButton.btn.btn-sm.btn-outline-secondary.w4-b.mr-1(type='button') 3개월
+						button#sixmonthButton.btn.btn-sm.btn-outline-secondary.w4-b.mr-1(type='button') 6개월
 					td
-						button.btn.btn-sm.btn-outline-secondary.ml-5(type='button') 조회
+						button#queryButton.btn.btn-sm.btn-outline-primary.ml-5(type='button') 조회
 	
 	table#table
 	.container-fluid
@@ -69,7 +77,7 @@ block maincontents
 							tr
 								td.w-30.bg-light 성명/상호명
 								td
-									span
+									span#insurant_b
 							tr
 								td.w-30.bg-light 생년월일/사업자번호
 								td
@@ -186,36 +194,13 @@ block maincontents
 			.col-sm
 				div
 					strong 7. 담보내역
-					table.table-sm.table-bordered.table-hover.w-100
-						tbody
+					table#preminums.table-sm.table-bordered.table-hover.w-100
+						thead
 							tr
 								th.bg-light  보장내용
 								th.text-center.bg-light  보장범위
 								th.text-center.bg-light  보험료
-							tr
-								td.w-30.bg-light 풍수해(건물)
-								td.text-right
-									span#elagorgninsdamt1
-								td.text-right
-									span
-							tr
-								td.w-30.bg-light 풍수해(시설및집기)
-								td.text-right
-									span#elagorgninsdamt2
-								td.text-right
-									span
-							tr
-								td.w-30.bg-light 풍수해(재고자산)
-								td.text-right
-									span#elagorgninsdamt3
-								td.text-right
-									span
-							tr
-								td.w-30.bg-light 풍수해(자기부담금)
-								td.text-right
-									span#elagorgninsdamt4
-								td.text-right
-									span
+						tbody
 
 				div.mt-3
 					strong 8. 기타

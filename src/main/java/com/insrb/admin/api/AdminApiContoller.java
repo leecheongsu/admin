@@ -2,12 +2,14 @@ package com.insrb.admin.api;
 
 import com.insrb.admin.exception.InsuEncryptException;
 import com.insrb.admin.mapper.CommonMapper;
+import com.insrb.admin.mapper.IN002TMapper;
 import com.insrb.admin.mapper.IN003TMapper;
 import com.insrb.admin.mapper.IN003T_V1Mapper;
 import com.insrb.admin.mapper.IN008TMapper;
 import com.insrb.admin.util.InsuStringUtil;
 import com.insrb.admin.util.cyper.UserInfoCyper;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,9 @@ public class AdminApiContoller {
 	CommonMapper commonMapper;
 
 	@Autowired
+	IN002TMapper in002tMapper;
+
+	@Autowired
 	IN003TMapper in003tMapper;
 
 	@Autowired
@@ -40,16 +45,26 @@ public class AdminApiContoller {
 	IN003T_V1Mapper in003t_v1Mapper;
 
 	@GetMapping(path = "/in008t/data")
-	public List<Map<String, Object>> in008t_data(HttpSession session) throws InsuEncryptException {
-		// LoginUser loginUser = (LoginUser) session.getAttribute(InsuConstant.USER);
-		// log.info("{} request /admin/api/data",loginUser.getUuid());
-		List<Map<String, Object>> users = in008tMapper.selectAll();
+	public Map<String, Object> in008t_data(
+		HttpSession session,
+		@RequestParam(name = "pageSize", required = true) String pageSize,
+		@RequestParam(name = "pageNumber", required = true) String pageNumber
+	)
+		throws InsuEncryptException {
+		int total = in008tMapper.selectAllTotal();
+
+		List<Map<String, Object>> users = in008tMapper.selectAll(pageSize, pageNumber);
 		for (Map<String, Object> user : users) {
 			String mobile = (String) user.get("mobile");
 			String decMobile = UserInfoCyper.DecryptMobile(mobile);
 			user.put("mobile", decMobile);
 		}
-		return users;
+		// return users;
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("total", String.valueOf(total));
+		data.put("rows", users);
+		return data;
 	}
 
 	@PutMapping(path = "/in008t/update")
@@ -84,14 +99,30 @@ public class AdminApiContoller {
 	}
 
 	@GetMapping(path = "/in003t_v1/data")
-	public List<Map<String, Object>> in003t_v1_data(HttpSession session) throws InsuEncryptException {
-		List<Map<String, Object>> list = in003t_v1Mapper.selectAll();
+	public Map<String, Object> in003t_v1_data(
+		HttpSession session,
+		@RequestParam(name = "p_prod_code", required = true) String p_prod_code,
+		@RequestParam(name = "p_from", required = true) String p_from,
+		@RequestParam(name = "p_to", required = true) String p_to,
+		@RequestParam(name = "pageSize", required = true) String pageSize,
+		@RequestParam(name = "pageNumber", required = true) String pageNumber
+	)
+		throws InsuEncryptException {
+		int total = in003t_v1Mapper.selectByInsDateTotal(p_prod_code, p_from, p_to);
+		List<Map<String, Object>> list = in003t_v1Mapper.selectByInsDate(pageSize, pageNumber, p_prod_code, p_from, p_to);
 		for (Map<String, Object> item : list) {
 			item.put("mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("mobile"))));
 			item.put("pbohumja_mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("pbohumja_mobile"))));
-		}
 
-		return list;
+			if (InsuStringUtil.Equals(String.valueOf(item.get("prod_code")), "m002")) {
+				List<Map<String, Object>> premium = in002tMapper.selectByQuoteNo(String.valueOf(item.get("quote_no")));
+				item.put("preminums", premium);
+			}
+		}
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("total", String.valueOf(total));
+		data.put("rows", list);
+		return data;
 	}
 
 	@PutMapping(path = "/in003t/update")

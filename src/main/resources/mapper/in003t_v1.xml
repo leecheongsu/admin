@@ -7,4 +7,22 @@
 		select *
 		  from in003t_v1
 	</select>
+
+	<select id="selectByInsDate" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">
+		select *
+		  from in003t_v1
+		 where ins_date between #{p_from} and to_date(#{p_to}||' 23:59:59','yyyy-mm-dd hh24:mi:ss') 
+		   and (#{p_prod_code} = '/' or prod_code = #{p_prod_code})
+	     order by ins_date desc
+		 offset #{pageNumber} -1 rows fetch next #{pageSize} rows only
+	</select>
+
+	<select id="selectByInsDateTotal" parameterType="String" resultType="int">
+		select count(*)
+		  from in003t_v1
+		 where ins_date between #{p_from} and to_date(#{p_to}||' 23:59:59','yyyy-mm-dd hh24:mi:ss') 
+		   and (#{p_prod_code} = '/' or prod_code = #{p_prod_code})
+	</select>
+
+
 </mapper>

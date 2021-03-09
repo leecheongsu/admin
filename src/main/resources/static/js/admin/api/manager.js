@@ -13,15 +13,16 @@ $(document).ready(function () {
 		url: "/admin/api/in008t/data",
 		idField: "uuid",
 		pagination: true,
+		sidePagination: "server",
 		iconSize: "sm",
-		classes: "table table-striped table-hover table-sm",
+		classes: "table table-hover table-sm",
 		search: true,
-		showRefresh: true,
+		// showRefresh: true,
 		// showToggle: true,
-		showColumns: true,
+		// showColumns: true,
 		cache: false,
 		pageSize: 20,
-		// 가입일자	소속	담당자	핸드폰	등급명	등급	상태
+		queryParamsType: "",
 		columns: [
 			{
 				title: "#",
