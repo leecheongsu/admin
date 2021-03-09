@@ -6,7 +6,6 @@
 	<select id="selectAllTotal" parameterType="String" resultType="int">
 		select count(*)
 		  from in008t
-		 order by regdate asc
 	</select>
 
 	<select id="selectAll" parameterType="String" resultType="com.insrb.admin.util.LowerKeyMap">

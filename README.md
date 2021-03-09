@@ -13,3 +13,7 @@
 
 ## Alertify
     https://alertifyjs.com/notifier.html    
+
+# 파일 Upload
+    서버에는 /var/www/upload 로 업로드함. 
+    777 모드로 변경해야 파일 생성됨.    
