@@ -17,9 +17,8 @@ $(document).ready(function () {
 		iconSize: "sm",
 		classes: "table table-hover table-sm",
 		search: true,
-		// showRefresh: true,
-		// showToggle: true,
-		// showColumns: true,
+		toolbar: '#toolbar',
+		toolbarAlign: 'right',
 		cache: false,
 		pageSize: 20,
 		queryParamsType: "",
@@ -38,7 +37,7 @@ $(document).ready(function () {
 				field: "regdate",
 				title: "가입일자",
 				sortable: true,
-				formatter: dateFormatter
+				formatter: dateFormatter,
 			},
 			{
 				title: "이메일",
@@ -68,9 +67,26 @@ $(document).ready(function () {
 					error: defaultXeditableOption.error,
 					success: defaultXeditableOption.success,
 					source: [
-						{ value: 'A', text: "슈퍼유저" },
-						{ value: 'B', text: "보험사" },
-						{ value: 'C', text: "GA" },
+						{ value: "A", text: "슈퍼유저" },
+						{ value: "B", text: "보험사" },
+						{ value: "C", text: "GA" },
+					],
+				},
+			},
+			{
+				title: "조회가능 보험",
+				field: "prod_code",
+				// align: "center",
+				// sortable: true,
+				editable: {
+					type: "select",
+					emptytext: defaultXeditableOption.emptytext,
+					error: defaultXeditableOption.error,
+					success: defaultXeditableOption.success,
+					source: [
+						{ value: "/", text: "전체" },
+						{ value: "m002", text: "메리츠화재" },
+						{ value: "h007", text: "현대해상" },
 					],
 				},
 			},
@@ -112,4 +128,64 @@ $(document).ready(function () {
 			},
 		],
 	});
+
+	var $boardForm = $('#boardForm');
+	$("#detailModal").on("hidden.bs.modal", function (e) {
+		$table.bootstrapTable("refresh");
+	});
+
+	$("#saveButton").click(function () {
+		$boardForm.submit();
+	});
+
+	$boardForm.validate({
+		// debug: false,
+		errorClass :'is-invalid',
+		submitHandler: function (form) {
+			var params = $(form).serialize();
+
+			console.log("form", params); // form, $(form).serialize());
+
+			$.ajax({ method: "POST", url: "/admin/api/in008t/", data: params })
+				.done(function (msg) {
+					if (msg.status == 'success') {
+						if (msg.id) $("#id").val(msg.id);
+						noti_success(msg.message);
+						$("#detailModal").modal("hide");
+					} else {
+						noti_error(msg.message);
+					}
+				})
+				.fail(function (err) {
+					noti_error(err);
+				});
+		},
+		rules: {
+			uuid: {
+				required: true,
+				email: true,
+			},
+			upwd: {
+				required: true,
+			},
+			name: {
+				required: true,
+			},
+			mobile: {
+				required: true,
+			},
+			ulevel: {
+				required: true,
+			},
+			comname: {
+				required: true,
+			},
+			businessnum: {
+				required: false,
+				digits: true,
+			},
+		},
+		messages: {},
+	});
+
 });

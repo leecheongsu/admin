@@ -1,6 +1,55 @@
 extends ../layout/base_admin
 block append javascripts 
-	script(src='/js/admin/api/manager.js')
-
+    script(src='/js/admin/api/manager.js')
 block maincontents
-	table#table
+    div#toolbar
+        div.btn-group.pull-right
+            button.btn.btn-sm.btn-outline-primary.ml-2(type='button', data-toggle='modal', data-target='#detailModal')
+                i.fa.fa-plus(aria-hidden='true')
+
+    div
+        table#table
+    div
+        .modal.fade#detailModal(tabindex='-1', role='dialog', aria-labelledby='detailModalLabel', aria-hidden='true')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5.modal-title#detailModalLabel 신규 관리자 등록
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                    .modal-body
+                        form#boardForm(onsubmit="return false;")
+                            .form-group
+                                label(for='uuid') 이메일
+                                input#uuid.form-control.form-control-sm(name='uuid', type='text')
+                            .form-group
+                                label(for='upwd') 비밀번호
+                                input#upwd.form-control.form-control-sm(name='upwd', type='password')
+                            .form-group
+                                label(for='name') 담당자
+                                input#name.form-control.form-control-sm(name='name', type='text')
+                            .form-group
+                                label(for='mobile') 전화번호
+                                input#mobile.form-control.form-control-sm(name='mobile', type='text')
+                            .form-group
+                                label(for='ulevel') 등급
+                                select#ulevel.form-control.form-control-sm(name='ulevel')
+                                    option(value='A') 슈퍼유저
+                                    option(value='B', selected="selected") 보험사
+                                    option(value='C') GA
+                            .form-group
+                                label(for='prod_code') 조회가능 보험
+                                select#prod_code.form-control.form-control-sm(name='prod_code')
+                                    option(value='/') 전체
+                                    option(value='m002', selected="selected") 메리츠화재
+                                    option(value='h007') 현대해상
+                            .form-group
+                                label(for='comname') 소속
+                                input#comname.form-control.form-control-sm(name='comname', type='text')
+                            .form-group
+                                label(for='businessnum') 사업자 번호
+                                input#businessnum.form-control.form-control-sm(name='businessnum', type='text')
+
+                    .modal-footer
+                        button.btn.btn-sm.btn-secondary(type='button', data-dismiss='modal') Close
+                        button#saveButton.btn.btn-sm.btn-primary(type='button') 저장

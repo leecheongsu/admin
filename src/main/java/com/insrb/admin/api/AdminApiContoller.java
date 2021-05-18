@@ -1,17 +1,15 @@
 package com.insrb.admin.api;
 
 import com.insrb.admin.exception.InsuEncryptException;
-import com.insrb.admin.mapper.CommonMapper;
-import com.insrb.admin.mapper.IN002TMapper;
-import com.insrb.admin.mapper.IN003TMapper;
-import com.insrb.admin.mapper.IN003T_V1Mapper;
-import com.insrb.admin.mapper.IN008TMapper;
+import com.insrb.admin.mapper.*;
 import com.insrb.admin.util.InsuStringUtil;
 import com.insrb.admin.util.cyper.UserInfoCyper;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import sun.jvm.hotspot.debugger.Page;
 
 @Slf4j
 @RequestMapping("/admin/api")
@@ -43,6 +42,9 @@ public class AdminApiContoller {
 
 	@Autowired
 	IN003T_V1Mapper in003t_v1Mapper;
+
+	@Autowired
+	IN203T_V1Mapper in203T_v1Mapper;
 
 	@GetMapping(path = "/in008t/data")
 	public Map<String, Object> in008t_data(
@@ -108,8 +110,10 @@ public class AdminApiContoller {
 		@RequestParam(name = "pageNumber", required = true) String pageNumber
 	)
 		throws InsuEncryptException {
+
 		int total = in003t_v1Mapper.selectByInsDateTotal(p_prod_code, p_from, p_to);
 		List<Map<String, Object>> list = in003t_v1Mapper.selectByInsDate(pageSize, pageNumber, p_prod_code, p_from, p_to);
+
 		for (Map<String, Object> item : list) {
 			item.put("mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("mobile"))));
 			item.put("pbohumja_mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("pbohumja_mobile"))));
@@ -119,11 +123,61 @@ public class AdminApiContoller {
 				item.put("preminums", premium);
 			}
 		}
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("total", String.valueOf(total));
 		data.put("rows", list);
 		return data;
 	}
+
+	@GetMapping(path = "/in203t_v1/data")
+	public Map<String, Object> in203t_v1_data(
+			HttpSession session,
+			@RequestParam(name = "p_prod_code", required = true) String p_prod_code,
+			@RequestParam(name = "p_from", required = true) String p_from,
+			@RequestParam(name = "p_to", required = true) String p_to,
+			@RequestParam(name = "pageSize", required = true) String pageSize,
+			@RequestParam(name = "pageNumber", required = true) String pageNumber
+	)
+			throws InsuEncryptException {
+
+		int totalGroup = in203T_v1Mapper.selectByInsDateTotal(p_prod_code, p_from, p_to);
+
+		int total = in003t_v1Mapper.selectByInsDateTotal(p_prod_code, p_from, p_to);
+//		List<Map<String, Object>> listGroup = in203T_v1Mapper.selectByInsDate(pageSize, pageNumber, p_prod_code, p_from, p_to);
+//		List<Map<String, Object>> list = in003t_v1Mapper.selectByInsDate(pageSize, pageNumber, p_prod_code, p_from, p_to);
+
+
+		log.info(p_prod_code);
+		//total + 처음
+		int totalAll = totalGroup + total;
+		List<Map<String, Object>> listAll = in203T_v1Mapper.selectByInsDateAll(pageSize, pageNumber, p_prod_code, p_from, p_to);
+
+
+
+		for (Map<String, Object> item : listAll) {
+
+			if(!InsuStringUtil.Equals(String.valueOf(item.get("prod_code")), "Gh007")) {
+				item.put("mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("mobile"))));
+				item.put("pbohumja_mobile", UserInfoCyper.DecryptMobile(String.valueOf(item.get("pbohumja_mobile"))));
+
+				if (InsuStringUtil.Equals(String.valueOf(item.get("prod_code")), "m002")) {
+					List<Map<String, Object>> premium = in002tMapper.selectByQuoteNo(String.valueOf(item.get("quote_no")));
+					item.put("preminums", premium);
+				}
+			}
+		}
+
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("total", String.valueOf(totalAll));
+		data.put("rows", listAll);
+
+//		log.info(String.valueOf(totalAll));
+//		log.info(listAll.toString());
+		return data;
+	}
+
 
 	@PutMapping(path = "/in003t/update")
 	public String in003t_update(

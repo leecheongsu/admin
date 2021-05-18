@@ -24,6 +24,7 @@ block maincontents
 							option(value='/' selected='selected') 전체
 							option(value='m002') 메리츠화재
 							option(value='h007') 현대해상
+							option(value='Gh007') 현대해상_G
 					td
 						strong.mr-2 보험가입일
 						input#p_from.datepicker.form-control.form-control-sm
@@ -36,6 +37,14 @@ block maincontents
 						button#sixmonthButton.btn.btn-sm.btn-outline-secondary.w4-b.mr-1(type='button') 6개월
 					td
 						button#queryButton.btn.btn-sm.btn-outline-primary.ml-5(type='button') 조회
+						//button#excelButton.btn.btn-sm.btn-outline-primary.ml-2(type='button') Excel
+					td
+					td
+					td
+						strong.mr-2 총 계약건수 :
+						strong#total.w-30
+						strong.mr-2 건
+
 	
 	table#table
 	.container-fluid
@@ -87,7 +96,7 @@ block maincontents
 								td
 									span#pbohumja_mobile
 							tr
-								td.w-30.bg-light 보험목적물 소유자
+								td.w-30.bg-light 보험목적물 소유구분
 								td
 									span
 
